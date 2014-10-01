@@ -4,7 +4,11 @@ Humanize.jl
 [![Build Status](https://travis-ci.org/IainNZ/Humanize.jl.svg)](https://travis-ci.org/IainNZ/Humanize.jl)
 [![Coverage Status](https://img.shields.io/coveralls/IainNZ/Humanize.jl.svg)](https://coveralls.io/r/IainNZ/Humanize.jl)
 
-Humanize numbers, including:
+
+Humanize numbers, including data sizes (`3e6 -> 3.0 MB or 2.9 MiB`).
+
+This package is MIT licensed, and is based on [jmoiron's humanize Python library](https://github.com/jmoiron/humanize/).
+
 
 ### Data sizes
 
