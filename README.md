@@ -6,7 +6,7 @@ Humanize.jl
 
 Humanize numbers, including
 * data sizes (`3e6 -> 3.0 MB or 2.9 MiB`).
-* Date/datetime differences (`Date(2014,2,3) - Date(2013,3,7) -> '1 year, 1 month'`)
+* Date/datetime differences (`Date(2014,2,3) - Date(2013,3,7) -> 1 year, 1 month`)
 
 This package is MIT licensed, and is based on [jmoiron's humanize Python library](https://github.com/jmoiron/humanize/).
 
