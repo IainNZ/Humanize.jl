@@ -3,6 +3,7 @@ Humanize.jl
 
 [![Build Status](https://travis-ci.org/IainNZ/Humanize.jl.svg)](https://travis-ci.org/IainNZ/Humanize.jl)
 [![Coverage Status](https://img.shields.io/coveralls/IainNZ/Humanize.jl.svg)](https://coveralls.io/r/IainNZ/Humanize.jl)
+[![Humanize](http://pkg.julialang.org/badges/Humanize_release.svg)](http://pkg.julialang.org/?pkg=Humanize&ver=release)
 
 Humanize numbers, including
 * data sizes (`3e6 -> 3.0 MB or 2.9 MiB`).
