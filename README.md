@@ -7,6 +7,7 @@ Humanize.jl
 Humanize numbers, including
 * data sizes (`3e6 -> 3.0 MB or 2.9 MiB`).
 * Date/datetime differences (`Date(2014,2,3) - Date(2013,3,7) -> 1 year, 1 month`)
+* Digit separator (`12345678 -> 12,345,678`)
 
 This package is MIT licensed, and is based on [jmoiron's humanize Python library](https://github.com/jmoiron/humanize/).
 
@@ -55,3 +56,11 @@ julia> timedelta(Date(2014,3,7) - Date(2013,2,4))
 "1 year, 1 month"
 ```
 
+### Digit separator
+
+```julia
+julia> digitsep(12345678)
+"12,345,678"
+julia> digitsep(12345678, sep = "'")
+"12'345'678"
+```

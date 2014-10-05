@@ -78,5 +78,30 @@ function test_timedelta()
 end
 
 
+function test_digitsep()
+    println("test_digitsep")
+
+    test = (
+            (1, "1"),
+            (12, "12"),
+            (123, "123"),
+            (1234, "1,234"),
+            (12345, "12,345"),
+            (123456, "123,456"),
+            (1234567, "1,234,567"),
+            (12345678, "12,345,678")
+            )
+    
+    n_test = length(test)
+
+    #digitsep(value::Integer)
+    println("  direct")
+    for t in test
+        @test digitsep(t[1]) == t[2]
+    end
+    
+end
+
 test_datasize()
 test_timedelta()
+test_digitsep()
