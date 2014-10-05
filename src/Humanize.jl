@@ -13,7 +13,7 @@ else
     import Base.Dates
 end
 
-export datasize, timedelta
+export datasize, timedelta, digitsep
 
 #=---------------------------------------------------------------------
 Format a number of bytes in a human-friendly format (eg. 10 kB).
@@ -84,5 +84,27 @@ timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T) =
     timedelta(((((years*12+months)*30+days)*24+hours)*60+mins)*60+secs)
 timedelta(dt_diff::Dates.Millisecond) = timedelta(div(int(dt_diff),1000))
 timedelta(d_diff::Dates.Day) = timedelta(int(d_diff)*24*3600)
+
+
+#=---------------------------------------------------------------------
+Convert an integer to a string, separating each 'k' digits by 'sep'.  'k'
+defaults to 3, separating by thousands.  The default "," for 'sep' matches the
+commonly used digit separator in the US.
+
+digitsep(value::Integer)
+    e.g. 12345678 -> "12,345,678"
+digitsep(value::Integer, sep = "'")
+    e.g. 12345678 -> "12'345'678"
+digitsep(value::Integer, sep = "'", k = 4)
+    e.g. 12345678 -> "1234'5678"
+=#
+
+function digitsep(value::Integer, sep = ",", k = 3)
+    value = string(value)
+    n = length(value)
+    starts = reverse([n:-k:1])
+    groups = [value[max(x-k+1, 1):x] for x in starts]
+    return join(groups, sep)
+end
 
 end
