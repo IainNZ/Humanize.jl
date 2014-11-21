@@ -64,4 +64,6 @@ julia> digitsep(12345678)
 "12,345,678"
 julia> digitsep(12345678, sep = "'")
 "12'345'678"
+julia> digitsep(12345678, sep = "-", k = 4)
+"1234-5678"
 ```
