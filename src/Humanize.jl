@@ -5,27 +5,25 @@
 # All original code is (c) Iain Dunning and MIT licensed.
 #----------------------------------------------------------------------
 
-module Humanize
+isdefined(Base, :__precompile__) && __precompile__()
 
-if VERSION < v"0.4-"
-    import Dates
-else
-    import Base.Dates
-end
+module Humanize
 
 export datasize, timedelta, digitsep
 
-#=---------------------------------------------------------------------
-Format a number of bytes in a human-friendly format (eg. 10 kB).
-style=:dec - default, decimal suffixes (kB, MB), base 10^3
-style=:bin - binary suffixes (KiB, MiB), base 2^10
-style=:gnu - GNU-style (ls -sh style, K, M), base 2^10
-=#
-
+#---------------------------------------------------------------------
 const dec_suf = [" B", " kB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"]
 const bin_suf = [" B", " KiB", " MiB", " GiB", " TiB", " PiB", " EiB", " ZiB", " YiB"]
 const gnu_suf = ["", "K", "M", "G", "T", "P", "E", "Z", "Y"]
+"""
+datasize(value::Number; style=:dec, format="%.1f")
 
+Format a number of bytes in a human-friendly format (eg. 10 kB).
+
+style=:dec - default, decimal suffixes (kB, MB), base 10^3
+style=:bin - binary suffixes (KiB, MiB), base 2^10
+style=:gnu - GNU-style (ls -sh style, K, M), base 2^10
+"""
 function datasize(value::Number; style=:dec, format="%.1f")
     suffix  = style == :gnu ? gnu_suf : (style == :bin ? bin_suf : dec_suf)
     base    = style == :dec ? 1000.0 : 1024.0
@@ -41,8 +39,15 @@ function datasize(value::Number; style=:dec, format="%.1f")
     return fmt_str(base * bytes / unit, s)
 end
 
-#=---------------------------------------------------------------------
+#---------------------------------------------------------------------
+"""
+timedelta(secs::Integer)
+timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T)
+timedelta(dt_diff::Dates.Millisecond)
+timedelta(d_diff::Dates.Day)
+
 Format a time length in a human friendly format.
+
 timedelta(secs::Integer)
     e.g. 3699   -> 'An hour'
 timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T)
@@ -53,8 +58,7 @@ timedelta(dt_diff::Dates.Millisecond)
     e.g. DateTime(2014,2,3) - DateTime(2013,3,7) -> '11 months'
 timedelta(d_diff::Dates.Day)
     e.g. Date(2014,3,7) - Date(2013,2,4) -> '1 year, 1 month'
-=#
-
+"""
 function timedelta(secs::Integer)
     mins   = div(  secs, 60); secs   -= 60*mins
     hours  = div(  mins, 60); mins   -= 60*hours
@@ -82,11 +86,14 @@ end
 # Assume nothing about magnitudes of inputs, so cast to seconds first
 timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T) =
     timedelta(((((years*12+months)*30+days)*24+hours)*60+mins)*60+secs)
-timedelta(dt_diff::Dates.Millisecond) = timedelta(div(int(dt_diff),1000))
-timedelta(d_diff::Dates.Day) = timedelta(int(d_diff)*24*3600)
+timedelta(dt_diff::Dates.Millisecond) = timedelta(div(Int(dt_diff),1000))
+timedelta(d_diff::Dates.Day) = timedelta(Int(d_diff)*24*3600)
 
 
-#=---------------------------------------------------------------------
+#---------------------------------------------------------------------
+"""
+digitsep(value::Integer, sep = ",", k = 3)
+
 Convert an integer to a string, separating each 'k' digits by 'sep'.  'k'
 defaults to 3, separating by thousands.  The default "," for 'sep' matches the
 commonly used digit separator in the US.
@@ -97,12 +104,11 @@ digitsep(value::Integer, sep = "'")
     e.g. 12345678 -> "12'345'678"
 digitsep(value::Integer, sep = "'", k = 4)
     e.g. 12345678 -> "1234'5678"
-=#
-
+"""
 function digitsep(value::Integer, sep = ",", k = 3)
     value = string(value)
     n = length(value)
-    starts = reverse([n:-k:1])
+    starts = reverse(collect(n:-k:1))
     groups = [value[max(x-k+1, 1):x] for x in starts]
     return join(groups, sep)
 end

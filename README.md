@@ -1,9 +1,11 @@
 Humanize.jl
 ===========
 
-[![Build Status](https://travis-ci.org/IainNZ/Humanize.jl.svg)](https://travis-ci.org/IainNZ/Humanize.jl)
-[![Coverage Status](https://img.shields.io/coveralls/IainNZ/Humanize.jl.svg)](https://coveralls.io/r/IainNZ/Humanize.jl)
-[![Humanize](http://pkg.julialang.org/badges/Humanize_release.svg)](http://pkg.julialang.org/?pkg=Humanize&ver=release)
+[![Build Status](https://travis-ci.org/IainNZ/Humanize.jl.svg?branch=master)](https://travis-ci.org/IainNZ/Humanize.jl)
+[![codecov.io](http://codecov.io/github/IainNZ/Humanize.jl/coverage.svg?branch=master)](http://codecov.io/github/IainNZ/Humanize.jl?branch=master)
+
+[![Humanize](http://pkg.julialang.org/badges/Humanize_0.3.svg)](http://pkg.julialang.org/?pkg=Humanize&ver=release)
+[![Humanize](http://pkg.julialang.org/badges/Humanize_0.4.svg)](http://pkg.julialang.org/?pkg=Humanize&ver=nightly)
 
 Humanize numbers, including
 * data sizes (`3e6 -> 3.0 MB or 2.9 MiB`).
@@ -15,6 +17,8 @@ This package is MIT licensed, and is based on [jmoiron's humanize Python library
 **Installation:** `Pkg.add("Humanize")`
 
 ## Documentation
+
+All functions are also documented using Julia's in-built help system, e.g. `?datasize`.
 
 ### Data sizes
 
@@ -43,7 +47,6 @@ timedelta(d_diff::Dates.Day)
 ```
 
 Turns a date/datetime difference into a abbreviated human-friendly form.
-Supports the types defined by `Dates.jl` on Julia 0.3, `Base.Dates` on Julia 0.4.
 
 ```julia
 julia> timedelta(70)
