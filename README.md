@@ -2,10 +2,10 @@ Humanize.jl
 ===========
 
 [![Build Status](https://travis-ci.org/IainNZ/Humanize.jl.svg?branch=master)](https://travis-ci.org/IainNZ/Humanize.jl)
-[![codecov.io](http://codecov.io/github/IainNZ/Humanize.jl/coverage.svg?branch=master)](http://codecov.io/github/IainNZ/Humanize.jl?branch=master)
+[![codecov](https://codecov.io/gh/IainNZ/Humanize.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/IainNZ/Humanize.jl)
 
-[![Humanize](http://pkg.julialang.org/badges/Humanize_0.3.svg)](http://pkg.julialang.org/?pkg=Humanize&ver=0.3)
-[![Humanize](http://pkg.julialang.org/badges/Humanize_0.4.svg)](http://pkg.julialang.org/?pkg=Humanize&ver=0.4)
+[![Humanize](http://pkg.julialang.org/badges/Humanize_0.4.svg)](http://pkg.julialang.org/?pkg=Humanize)
+[![Humanize](http://pkg.julialang.org/badges/Humanize_0.5.svg)](http://pkg.julialang.org/?pkg=Humanize)
 
 Humanize numbers, including
 * data sizes (`3e6 -> 3.0 MB or 2.9 MiB`).
