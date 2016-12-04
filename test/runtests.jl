@@ -85,7 +85,7 @@ function test_digitsep()
             (1234567, "1,234,567"),
             (12345678, "12,345,678")
             )
-    
+
     n_test = length(test)
 
     #digitsep(value::Integer)
@@ -93,9 +93,67 @@ function test_digitsep()
     for t in test
         @test digitsep(t[1]) == t[2]
     end
-    
+
+end
+
+function test_nicenumbers()
+    println("test_nicenumbers")
+
+    # Integers
+    @test nicenumber(1) == "1"
+    @test nicenumber(-11111) == "-11111"
+    @test nicenumber(-1e4) == "-10000"
+    @test nicenumber(+1e6) == "1⋅10⁶"
+    @test nicenumber(-1e6) == "-1⋅10⁶"
+    @test nicenumber(-5e+60) == "-5⋅10⁶⁰"
+    # Floating point
+    @test nicenumber(3e-4) == "3⋅10⁻⁴"
+    @test nicenumber(1.289e2) == "128.9"
+    @test nicenumber(1.22e1) == "12.2"
+    @test nicenumber(0.22e1) == "2.2"
+    @test nicenumber(1.12345678) == "1.123"
+    @test nicenumber(198.12345678) == "198.123"
+    @test nicenumber(1988.12345678) == "1.988⋅10³"
+    @test nicenumber(0.00000198812345678) == "1.988⋅10⁻⁶"
+
+    # General tests
+    @test "1"                  |> nicenumber == "1"
+    @test "01"                 |> nicenumber == "1"
+    @test "010"                |> nicenumber == "10"
+    @test "100000000"          |> nicenumber == "1⋅10⁸"
+    @test "1e20"               |> nicenumber == "1⋅10²⁰"
+    @test "1e2"                |> nicenumber == "100"
+    @test "+1"                 |> nicenumber == "1"
+    @test "+01"                |> nicenumber == "1"
+    @test "+010"               |> nicenumber == "10"
+    @test "+100000000"         |> nicenumber == "1⋅10⁸"
+    @test "+1e20"              |> nicenumber == "1⋅10²⁰"
+    @test "+1e+2"              |> nicenumber == "100"
+    @test "-1"                 |> nicenumber == "-1"
+    @test "-01"                |> nicenumber == "-1"
+    @test "-010"               |> nicenumber == "-10"
+    @test "-100000000"         |> nicenumber == "-1⋅10⁸"
+    @test "-1e20"              |> nicenumber == "-1⋅10²⁰"
+    @test "-1e-2"              |> nicenumber == "-0.01"
+    @test "+1.42"              |> nicenumber == "1.42"
+    @test "-01.42"             |> nicenumber == "-1.42"
+    @test "+010.42"            |> nicenumber == "10.42"
+    @test "-100000.42"         |> nicenumber == "-1.000⋅10⁵"
+    @test "2.42e-20"           |> nicenumber == "2.42⋅10⁻²⁰"
+    @test "-0.000000242"       |> nicenumber == "-2.42⋅10⁻⁷"
+    @test "+0.000000242"       |> nicenumber == "2.42⋅10⁻⁷"
+
+    @test "ρ ≃ 0.4 ± 2e-5"     |> nicenumber == "ρ ≃ 0.4 ± 2⋅10⁻⁵"
+    @test "ρ ≃ 00.04 ± 2e-3"   |> nicenumber == "ρ ≃ 0.04 ± 0.002"
+    @test "γ=4.05e-20, β=5e-3" |> nicenumber == "γ=4.05⋅10⁻²⁰, β=0.005"
+    @test "∫σ dx = 0.00004"    |> nicenumber == "∫σ dx = 4⋅10⁻⁵"
+
+    # Escaping sequences.
+    num = Float64(π)
+    @test nicenumber("$num") == "3.142"
 end
 
 test_datasize()
 test_timedelta()
 test_digitsep()
+test_nicenumbers()

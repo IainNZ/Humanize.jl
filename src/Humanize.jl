@@ -9,7 +9,7 @@ isdefined(Base, :__precompile__) && __precompile__()
 
 module Humanize
 
-export datasize, timedelta, digitsep
+export datasize, timedelta, digitsep, nicenumber
 
 #---------------------------------------------------------------------
 const dec_suf = [" B", " kB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"]
@@ -65,7 +65,7 @@ function timedelta(secs::Integer)
     days   = div( hours, 24); hours  -= 24*days
     months = div(  days, 30); days   -= 30*months
     years  = div(months, 12); months -= 12*years
-    
+
     if years == 0
         if days == 0 && months == 0
             hours >= 1 && return hours == 1 ? "an hour"  : "$hours hours"
@@ -112,5 +112,7 @@ function digitsep(value::Integer, sep = ",", k = 3)
     groups = [value[max(x-k+1, 1):x] for x in starts]
     return join(groups, sep)
 end
+
+include("nicenumbers.jl")
 
 end
