@@ -29,14 +29,14 @@ function datasize(value::Number; style=:dec, format="%.1f")
     base    = style == :dec ? 1000.0 : 1024.0
     bytes   = float(value)
     format  = "$format%s"
-    fmt_str = @eval (v,s)->@sprintf($format,v,s)
     unit    = base
     s       = suffix[1]
     for (i,s) in enumerate(suffix)
         unit = base ^ (i)
         bytes < unit && break
     end
-    return fmt_str(base * bytes / unit, s)
+    v = base * bytes / unit
+    return @eval @sprintf($format, $v, $s)
 end
 
 #---------------------------------------------------------------------
