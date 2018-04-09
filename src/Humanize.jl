@@ -65,7 +65,7 @@ function timedelta(secs::Integer)
     days   = div( hours, 24); hours  -= 24*days
     months = div(  days, 30); days   -= 30*months
     years  = div(months, 12); months -= 12*years
-    
+
     if years == 0
         if days == 0 && months == 0
             hours >= 1 && return hours == 1 ? "an hour"  : "$hours hours"
@@ -106,11 +106,12 @@ digitsep(value::Integer, sep = "'", k = 4)
     e.g. 12345678 -> "1234'5678"
 """
 function digitsep(value::Integer, sep = ",", k = 3)
-    value = string(value)
+    isnegative = value < 0
+    value = string(abs(value))
     n = length(value)
     starts = reverse(collect(n:-k:1))
     groups = [value[max(x-k+1, 1):x] for x in starts]
-    return join(groups, sep)
+    return (isnegative ? "-" : "") * join(groups, sep)
 end
 
 end
