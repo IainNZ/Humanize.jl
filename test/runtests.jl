@@ -1,5 +1,6 @@
+import Dates
+using Test
 using Humanize
-using Base.Test
 
 function test_datasize()
     println("test_datasize")

@@ -9,6 +9,9 @@ __precompile__()
 
 module Humanize
 
+import Dates
+import Printf: @sprintf
+
 export datasize, timedelta, digitsep
 
 #---------------------------------------------------------------------
@@ -30,13 +33,14 @@ function datasize(value::Number; style=:dec, format="%.1f")
     bytes   = float(value)
     format  = "$format%s"
     unit    = base
-    s       = suffix[1]
+    biggest_suffix = suffix[1]
     for (i,s) in enumerate(suffix)
         unit = base ^ (i)
+        biggest_suffix = suffix[i]
         bytes < unit && break
     end
     v = base * bytes / unit
-    return @eval @sprintf($format, $v, $s)
+    return @eval @sprintf($format, $v, $biggest_suffix)
 end
 
 #---------------------------------------------------------------------
@@ -84,8 +88,10 @@ function timedelta(secs::Integer)
     end
 end
 # Assume nothing about magnitudes of inputs, so cast to seconds first
-timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T) =
-    timedelta(((((years*12+months)*30+days)*24+hours)*60+mins)*60+secs)
+function timedelta(years::T, months::T, days::T, hours::T, mins::T,
+    secs::T) where T <: Integer
+    return timedelta(((((years*12+months)*30+days)*24+hours)*60+mins)*60+secs)
+end
 timedelta(dt_diff::Dates.Millisecond) = timedelta(div(dt_diff.value,1000))
 timedelta(d_diff::Dates.Day) = timedelta(d_diff.value*24*3600)
 
