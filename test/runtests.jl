@@ -39,10 +39,6 @@ end  # testset datasize.
             ((0, 0, 65, 0, 0, 0), "2 months"),
             ((0, 0, 9, 0, 0, 0), "9 days"),
             ((0, 0, 365, 0, 0, 0), "a year")]
-    
-    @testset "full signature $output" for (inputs, output) in DATA
-        @test Humanize.timedelta(inputs...) == output
-    end
 
     @testset "datetime diff $output" for (inputs, output) in DATA
         base_datetime = Dates.DateTime(2014,1,1,0,0,0)
