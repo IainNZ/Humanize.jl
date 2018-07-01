@@ -5,7 +5,7 @@
 # All original code is (c) Iain Dunning and MIT licensed.
 #----------------------------------------------------------------------
 
-isdefined(Base, :__precompile__) && __precompile__()
+__precompile__()
 
 module Humanize
 
@@ -86,8 +86,8 @@ end
 # Assume nothing about magnitudes of inputs, so cast to seconds first
 timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T) =
     timedelta(((((years*12+months)*30+days)*24+hours)*60+mins)*60+secs)
-timedelta(dt_diff::Dates.Millisecond) = timedelta(div(Int(dt_diff),1000))
-timedelta(d_diff::Dates.Day) = timedelta(Int(d_diff)*24*3600)
+timedelta(dt_diff::Dates.Millisecond) = timedelta(div(dt_diff.value,1000))
+timedelta(d_diff::Dates.Day) = timedelta(d_diff.value*24*3600)
 
 
 #---------------------------------------------------------------------
