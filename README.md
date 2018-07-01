@@ -4,17 +4,12 @@ Humanize.jl
 [![Build Status](https://travis-ci.org/IainNZ/Humanize.jl.svg?branch=master)](https://travis-ci.org/IainNZ/Humanize.jl)
 [![codecov](https://codecov.io/gh/IainNZ/Humanize.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/IainNZ/Humanize.jl)
 
-[![Humanize](http://pkg.julialang.org/badges/Humanize_0.4.svg)](http://pkg.julialang.org/?pkg=Humanize)
-[![Humanize](http://pkg.julialang.org/badges/Humanize_0.5.svg)](http://pkg.julialang.org/?pkg=Humanize)
-
 Humanize numbers, including
 * data sizes (`3e6 -> 3.0 MB or 2.9 MiB`).
 * Date/datetime differences (`Date(2014,2,3) - Date(2013,3,7) -> 1 year, 1 month`)
 * Digit separator (`12345678 -> 12,345,678`)
 
 This package is MIT licensed, and is based on [jmoiron's humanize Python library](https://github.com/jmoiron/humanize/).
-
-**Installation:** `Pkg.add("Humanize")`
 
 ## Documentation
 
