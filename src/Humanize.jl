@@ -99,12 +99,13 @@ Convert an integer to a string, separating each `per_separator` digits by
     digitsep(value, separator="/", per_separator=4)  # 12345678 -> "1234/5678".
 """
 function digitsep(value::Integer, seperator=",", per_separator=3)
-    value = string(value)  # Stringify, no seperators.
+    isnegative = value < zero(value)
+    value = string(abs(value))  # Stringify, no seperators.
     # Figure out last character index of each group of digits.
     group_ends = reverse(collect(length(value):-per_separator:1))
     groups = [value[max(end_index - per_separator + 1, 1):end_index]
               for end_index in group_ends]
-    return join(groups, seperator)
+    return (isnegative ? "-" : "") * join(groups, seperator)
 end
 
 end  # module Humanize.
