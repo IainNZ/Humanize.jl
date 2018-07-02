@@ -1,65 +1,65 @@
-#----------------------------------------------------------------------
-# Humanize.jl    https://github.com/IainNZ/Humanize.jl
+# Humanize.jl
+# https://github.com/IainNZ/Humanize.jl
 # Based on jmoiron's humanize Python library (MIT licensed):
 #  https://github.com/jmoiron/humanize/
 # All original code is (c) Iain Dunning and MIT licensed.
-#----------------------------------------------------------------------
 
-isdefined(Base, :__precompile__) && __precompile__()
+__precompile__()
 
 module Humanize
 
-export datasize, timedelta, digitsep
+import Dates
+import Printf: @sprintf
 
-#---------------------------------------------------------------------
-const dec_suf = [" B", " kB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"]
-const bin_suf = [" B", " KiB", " MiB", " GiB", " TiB", " PiB", " EiB", " ZiB", " YiB"]
-const gnu_suf = ["", "K", "M", "G", "T", "P", "E", "Z", "Y"]
+const SUFFIXES = Dict(
+    :dec => [" B", " kB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"],
+    :bin => [" B", " KiB", " MiB", " GiB", " TiB", " PiB", " EiB", " ZiB", " YiB"],
+    :gnu => ["", "K", "M", "G", "T", "P", "E", "Z", "Y"]
+)
+const BASES = Dict(:dec => 1000, :bin => 1024, :gnu => 1024)
+
 """
-datasize(value::Number; style=:dec, format="%.1f")
+    datasize(value::Number; style=:dec, format="%.1f")
 
 Format a number of bytes in a human-friendly format (eg. 10 kB).
 
-style=:dec - default, decimal suffixes (kB, MB), base 10^3
-style=:bin - binary suffixes (KiB, MiB), base 2^10
-style=:gnu - GNU-style (ls -sh style, K, M), base 2^10
+    style=:dec - default, decimal suffixes (kB, MB), base 10^3
+    style=:bin - binary suffixes (KiB, MiB), base 2^10
+    style=:gnu - GNU-style (ls -sh style, K, M), base 2^10
 """
-function datasize(value::Number; style=:dec, format="%.1f")
-    suffix  = style == :gnu ? gnu_suf : (style == :bin ? bin_suf : dec_suf)
-    base    = style == :dec ? 1000.0 : 1024.0
-    bytes   = float(value)
-    format  = "$format%s"
-    unit    = base
-    s       = suffix[1]
-    for (i,s) in enumerate(suffix)
-        unit = base ^ (i)
+function datasize(value::Number; style=:dec, format="%.1f")::String
+    suffix = SUFFIXES[style]
+    base = float(BASES[style])
+    bytes = float(value)
+    unit = base
+    biggest_suffix = suffix[1]
+    for power in 1:length(suffix)
+        unit = base ^ power
+        biggest_suffix = suffix[power]
         bytes < unit && break
     end
-    v = base * bytes / unit
-    return @eval @sprintf($format, $v, $s)
+    value = base * bytes / unit
+    format = "$format%s"
+    return @eval @sprintf($format, $value, $biggest_suffix)
 end
 
-#---------------------------------------------------------------------
+
 """
-timedelta(secs::Integer)
-timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T)
-timedelta(dt_diff::Dates.Millisecond)
-timedelta(d_diff::Dates.Day)
+    timedelta(secs::Integer)
+    timedelta(seconds::Dates.Second)
+    timedelta(Δdt::Dates.Millisecond)
+    timedelta(Δdate::Dates.Day)
 
 Format a time length in a human friendly format.
 
-timedelta(secs::Integer)
-    e.g. 3699   -> 'An hour'
-timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T)
-    e.g. days=1,hours=4,...     -> 'A day'
-         hours=4,mins=2,...     -> '4 hours'
-         years=1,months=2,...   -> '1 year, 2 months'
-timedelta(dt_diff::Dates.Millisecond)
-    e.g. DateTime(2014,2,3) - DateTime(2013,3,7) -> '11 months'
-timedelta(d_diff::Dates.Day)
-    e.g. Date(2014,3,7) - Date(2013,2,4) -> '1 year, 1 month'
+    timedelta(seconds::Integer)  # 3699 -> "An hour".
+    timedelta(Δdt::Dates.Millisecond)
+        e.g. DateTime(2014,2,3) - DateTime(2013,3,7) -> "11 months".
+    timedelta(Δdate::Dates.Day)
+        e.g. Date(2014,3,7) - Date(2013,2,4) -> "1 year, 1 month".
 """
-function timedelta(secs::Integer)
+function timedelta(seconds::Integer)
+    secs   = seconds
     mins   = div(  secs, 60); secs   -= 60*mins
     hours  = div(  mins, 60); mins   -= 60*hours
     days   = div( hours, 24); hours  -= 24*days
@@ -83,34 +83,29 @@ function timedelta(secs::Integer)
         return "$years years"
     end
 end
-# Assume nothing about magnitudes of inputs, so cast to seconds first
-timedelta{T<:Integer}(years::T,months::T,days::T,hours::T,mins::T,secs::T) =
-    timedelta(((((years*12+months)*30+days)*24+hours)*60+mins)*60+secs)
-timedelta(dt_diff::Dates.Millisecond) = timedelta(div(Int(dt_diff),1000))
-timedelta(d_diff::Dates.Day) = timedelta(Int(d_diff)*24*3600)
+timedelta(seconds::Dates.Second) = timedelta(seconds.value)
+timedelta(Δdt::Dates.Millisecond) = timedelta(convert(Dates.Second, Δdt))
+timedelta(Δdate::Dates.Day) = timedelta(convert(Dates.Second, Δdate))
 
 
-#---------------------------------------------------------------------
 """
-digitsep(value::Integer, sep = ",", k = 3)
+    digitsep(value::Integer, separator=",", per_separator=3)
 
-Convert an integer to a string, separating each 'k' digits by 'sep'.  'k'
-defaults to 3, separating by thousands.  The default "," for 'sep' matches the
-commonly used digit separator in the US.
+Convert an integer to a string, separating each `per_separator` digits by
+`separator`.
 
-digitsep(value::Integer)
-    e.g. 12345678 -> "12,345,678"
-digitsep(value::Integer, sep = "'")
-    e.g. 12345678 -> "12'345'678"
-digitsep(value::Integer, sep = "'", k = 4)
-    e.g. 12345678 -> "1234'5678"
+    digitsep(value)  # 12345678 -> "12,345,678".
+    digitsep(value, separator="'")  # 12345678 -> "12'345'678".
+    digitsep(value, separator="/", per_separator=4)  # 12345678 -> "1234/5678".
 """
-function digitsep(value::Integer, sep = ",", k = 3)
-    value = string(value)
-    n = length(value)
-    starts = reverse(collect(n:-k:1))
-    groups = [value[max(x-k+1, 1):x] for x in starts]
-    return join(groups, sep)
+function digitsep(value::Integer, seperator=",", per_separator=3)
+    isnegative = value < zero(value)
+    value = string(abs(value))  # Stringify, no seperators.
+    # Figure out last character index of each group of digits.
+    group_ends = reverse(collect(length(value):-per_separator:1))
+    groups = [value[max(end_index - per_separator + 1, 1):end_index]
+              for end_index in group_ends]
+    return (isnegative ? "-" : "") * join(groups, seperator)
 end
 
-end
+end  # module Humanize.
