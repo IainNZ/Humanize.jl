@@ -11,6 +11,8 @@ module Humanize
 import Dates
 import Printf: @sprintf
 
+export datasize, timedelta, digitsep
+
 const SUFFIXES = Dict(
     :dec => [" B", " kB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"],
     :bin => [" B", " KiB", " MiB", " GiB", " TiB", " PiB", " EiB", " ZiB", " YiB"],
