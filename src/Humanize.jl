@@ -34,7 +34,7 @@ function datasize(value::Number; style=:dec, format="%.1f")::String
     unit = base
     biggest_suffix = suffix[1]
     for power in 1:length(suffix)
-        unit = base ^ power
+        unit = base^power
         biggest_suffix = suffix[power]
         bytes < unit && break
     end
@@ -45,26 +45,25 @@ end
 
 
 """
-    timedelta(secs::Integer)
+    timedelta(seconds::Integer)
     timedelta(seconds::Dates.Second)
     timedelta(Δdt::Dates.Millisecond)
     timedelta(Δdate::Dates.Day)
 
-Format a time length in a human friendly format.
+Turns a date/datetime difference into a abbreviated human-friendly form.
 
-    timedelta(seconds::Integer)  # 3699 -> "An hour".
-    timedelta(Δdt::Dates.Millisecond)
-        e.g. DateTime(2014,2,3) - DateTime(2013,3,7) -> "11 months".
-    timedelta(Δdate::Dates.Day)
-        e.g. Date(2014,3,7) - Date(2013,2,4) -> "1 year, 1 month".
+    timedelta(70)  # "a minute"
+    timedelta(DateTime(2014,2,3,12,11,10) - 
+                DateTime(2013,3,7,13,1,20))  # "11 months"
+    timedelta(Date(2014,3,7) - Date(2013,2,4))  # "1 year, 1 month"
 """
 function timedelta(seconds::Integer)
     secs   = seconds
-    mins   = div(  secs, 60); secs   -= 60*mins
-    hours  = div(  mins, 60); mins   -= 60*hours
-    days   = div( hours, 24); hours  -= 24*days
-    months = div(  days, 30); days   -= 30*months
-    years  = div(months, 12); months -= 12*years
+    mins   = div(secs, 60); secs -= 60 * mins
+    hours  = div(mins, 60); mins -= 60 * hours
+    days   = div(hours, 24); hours -= 24 * days
+    months = div(days, 30); days -= 30 * months
+    years  = div(months, 12); months -= 12 * years
     
     if years == 0
         if days == 0 && months == 0
@@ -89,16 +88,16 @@ timedelta(Δdate::Dates.Day) = timedelta(convert(Dates.Second, Δdate))
 
 
 """
-    digitsep(value::Integer, separator=",", per_separator=3)
+    digitsep(value::Integer; separator=",", per_separator=3)
 
 Convert an integer to a string, separating each `per_separator` digits by
 `separator`.
 
-    digitsep(value)  # 12345678 -> "12,345,678".
-    digitsep(value, separator="'")  # 12345678 -> "12'345'678".
-    digitsep(value, separator="/", per_separator=4)  # 12345678 -> "1234/5678".
+    digitsep(12345678)  # "12,345,678"
+    digitsep(12345678, seperator= "'")  # "12'345'678"
+    digitsep(12345678, seperator= "-", per_separator=4)  # "1234-5678"
 """
-function digitsep(value::Integer, seperator=",", per_separator=3)
+function digitsep(value::Integer; seperator=",", per_separator=3)
     isnegative = value < zero(value)
     value = string(abs(value))  # Stringify, no seperators.
     # Figure out last character index of each group of digits.

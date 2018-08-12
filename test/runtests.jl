@@ -31,7 +31,7 @@ end  # testset datasize.
             ((0, 0, 0, 23, 50, 50), "23 hours"),
             ((0, 0, 1, 0, 0, 0), "a day"),
             ((0, 0, 500, 0, 0, 0), "1 year, 4 months"),
-            ((0, 0, 365*2 + 35, 0, 0, 0), "2 years"),
+            ((0, 0, 365 * 2 + 35, 0, 0, 0), "2 years"),
             ((0, 0, 10000, 0, 0, 0), "27 years"),
             ((0, 0, 365 + 30, 0, 0, 0), "1 year, 1 month"),
             ((0, 0, 365 + 4, 0, 0, 0), "a year"),
@@ -41,7 +41,7 @@ end  # testset datasize.
             ((0, 0, 365, 0, 0, 0), "a year")]
 
     @testset "datetime diff $output" for (inputs, output) in DATA
-        base_datetime = Dates.DateTime(2014,1,1,0,0,0)
+            base_datetime = Dates.DateTime(2014, 1, 1, 0, 0, 0)
         new_datetime = Dates.Year(inputs[1]) + base_datetime
         new_datetime += Dates.Month(inputs[2])
         new_datetime += Dates.Day(inputs[3])
