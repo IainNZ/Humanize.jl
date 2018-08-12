@@ -1,10 +1,13 @@
 language: julia
 os:
-    - linux
+  - linux
 julia:
-    - 0.7
-    - nightly
+  - 1.0
+  - nightly
 notifications:
-    email: false
-after_success:
-    - julia -e 'cd(Pkg.dir("Humanize")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  email: false
+git:
+  depth: 99999999
+matrix:
+  allow_failures:
+  - julia: nightly
