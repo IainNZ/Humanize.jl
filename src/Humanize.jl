@@ -94,17 +94,17 @@ Convert an integer to a string, separating each `per_separator` digits by
 `separator`.
 
     digitsep(12345678)  # "12,345,678"
-    digitsep(12345678, seperator= "'")  # "12'345'678"
-    digitsep(12345678, seperator= "-", per_separator=4)  # "1234-5678"
+    digitsep(12345678, separator= "'")  # "12'345'678"
+    digitsep(12345678, separator= "-", per_separator=4)  # "1234-5678"
 """
-function digitsep(value::Integer; seperator=",", per_separator=3)
+function digitsep(value::Integer; separator=",", per_separator=3)
     isnegative = value < zero(value)
-    value = string(abs(value))  # Stringify, no seperators.
+    value = string(abs(value))  # Stringify, no separators.
     # Figure out last character index of each group of digits.
     group_ends = reverse(collect(length(value):-per_separator:1))
     groups = [value[max(end_index - per_separator + 1, 1):end_index]
               for end_index in group_ends]
-    return (isnegative ? "-" : "") * join(groups, seperator)
+    return (isnegative ? "-" : "") * join(groups, separator)
 end
 
 end  # module Humanize.
