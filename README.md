@@ -61,4 +61,5 @@ import Humanize: digitsep
 digitsep(12345678)  # "12,345,678"
 digitsep(12345678, seperator= "'")  # "12'345'678"
 digitsep(12345678, seperator= "-", per_separator=4)  # "1234-5678"
+digitsep(12345678, seperator= "_")  # Note 12_345_678 is a legal value in Julia source code, Meta.parse will parse such, while parse doesn't.
 ```
