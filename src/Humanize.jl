@@ -4,8 +4,6 @@
 #  https://github.com/jmoiron/humanize/
 # All original code is (c) Iain Dunning and MIT licensed.
 
-__precompile__()
-
 module Humanize
 
 import Dates
