@@ -105,4 +105,6 @@ function digitsep(value::Integer; seperator=",", per_separator=3)
     return (isnegative ? "-" : "") * join(groups, seperator)
 end
 
+public datasize, timedelta, digitsep
+
 end  # module Humanize.
